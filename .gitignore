@@ -4,4 +4,7 @@ node_modules
 /functions/\[\[path\]\].js
 /functions/\[\[path\]\].js.map
 /public/build
+/app/styles
 .env
+.dev.vars
+wrangler.toml

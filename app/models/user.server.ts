@@ -1,19 +1,30 @@
 import type { Password, User } from "@prisma/client/edge";
+import type { AppLoadContext } from "@remix-run/cloudflare";
 import bcrypt from "bcryptjs";
 
-import { prisma } from "~/db.server";
+import { getPrismaClient } from "~/db.server";
 
 export type { User } from "@prisma/client/edge";
 
-export async function getUserById(id: User["id"]) {
+export async function getUserById(id: User["id"], context: AppLoadContext) {
+  const prisma = await getPrismaClient(context.DATABASE_URL as string);
   return prisma.user.findUnique({ where: { id } });
 }
 
-export async function getUserByEmail(email: User["email"]) {
+export async function getUserByEmail(
+  email: User["email"],
+  context: AppLoadContext
+) {
+  const prisma = await getPrismaClient(context.DATABASE_URL as string);
   return prisma.user.findUnique({ where: { email } });
 }
 
-export async function createUser(email: User["email"], password: string) {
+export async function createUser(
+  email: User["email"],
+  password: string,
+  context: AppLoadContext
+) {
+  const prisma = await getPrismaClient(context.DATABASE_URL as string);
   const hashedPassword = await bcrypt.hash(password, 10);
 
   return prisma.user.create({
@@ -28,14 +39,20 @@ export async function createUser(email: User["email"], password: string) {
   });
 }
 
-export async function deleteUserByEmail(email: User["email"]) {
+export async function deleteUserByEmail(
+  email: User["email"],
+  context: AppLoadContext
+) {
+  const prisma = await getPrismaClient(context.DATABASE_URL as string);
   return prisma.user.delete({ where: { email } });
 }
 
 export async function verifyLogin(
   email: User["email"],
-  password: Password["hash"]
+  password: Password["hash"],
+  context: AppLoadContext
 ) {
+  const prisma = await getPrismaClient(context.DATABASE_URL as string);
   const userWithPassword = await prisma.user.findUnique({
     where: { email },
     include: {

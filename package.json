@@ -2,13 +2,18 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
+    "build": "cross-env NODE_ENV=production run-s build:*",
+    "build:prisma": "PRISMA_CLIENT_ENGINE_TYPE=dataproxy prisma generate",
+    "build:css": "npm run css:generate -- -m",
+    "build:remix": "remix build",
+    "config": "pm2-dev ./pm2.config.js",
     "dev:remix": "remix watch",
-    "dev:wrangler": "cross-env NODE_ENV=development wrangler pages dev ./public",
-    "dev": "remix build && run-p \"dev:*\"",
+    "dev:wrangler": "cross-env NODE_ENV=development wrangler pages dev ./public --kv SESSIONS",
+    "dev": "npm run css:generate && remix build && run-p \"dev:*\"",
     "start": "cross-env NODE_ENV=production npm run dev:wrangler",
-    "generate-client": "prisma generate --data-proxy",
-    "migrate": "DATABASE_URL=\"$MIGRATE_DATABASE_URL\" prisma migrate deploy"
+    "css:generate": "tailwindcss -o app/styles/app.css",
+    "prisma:generate": "prisma generate --data-proxy",
+    "prisma:migrate": "DATABASE_URL=$(grep MIGRATE_DATABASE_URL .env | cut -d '=' -f2) prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^4.5.0",
@@ -28,9 +33,13 @@
     "@types/bcryptjs": "^2.4.2",
     "@types/react": "^17.0.47",
     "@types/react-dom": "^17.0.17",
+    "autoprefixer": "^10.4.13",
     "eslint": "^8.23.1",
     "npm-run-all": "^4.1.5",
+    "pm2": "^5.2.2",
+    "postcss": "^8.4.18",
     "prisma": "^4.5.0",
+    "tailwindcss": "^3.2.2",
     "typescript": "^4.7.4",
     "wrangler": "^2.0.27"
   },
