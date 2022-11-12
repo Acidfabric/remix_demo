@@ -1,0 +1,11 @@
+name: Sentry release information
+on: [push]
+jobs:
+  sentry:
+    name: Upload Release information
+    steps:
+      - name: Run build script
+        run: ./scripts/build.sh
+        shell: bash
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
