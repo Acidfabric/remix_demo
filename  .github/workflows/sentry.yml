@@ -1,6 +1,9 @@
 ### SENTRY
 name: Sentry release information
-on: [push]
+on:
+  push:
+    branches:
+      - main
 jobs:
   Sentry-Release-Information:
     runs-on: ubuntu-latest
