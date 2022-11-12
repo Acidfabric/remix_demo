@@ -2,8 +2,8 @@
 curl -sL https://sentry.io/get-cli/ | SENTRY_CLI_VERSION="2.2.0" bash
 # Setup configuration values
 SENTRY_AUTH_TOKEN="$SENTRY_AUTH_TOKEN"
-SENTRY_ORG=dropshipping-fs
-SENTRY_PROJECT=javascript-remix
+export SENTRY_ORG=dropshipping-fs
+export SENTRY_PROJECT=javascript-remix
 VERSION=`sentry-cli releases propose-version`
 # Workflow to create releases
 sentry-cli releases new "$VERSION"
