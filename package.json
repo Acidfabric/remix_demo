@@ -15,6 +15,9 @@
     "prisma:generate": "prisma generate --data-proxy",
     "prisma:migrate": "DATABASE_URL=$(grep MIGRATE_DATABASE_URL .env | cut -d '=' -f2) prisma migrate deploy"
   },
+  "prisma": {
+    "seed": "node --require esbuild-register prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^4.5.0",
     "@remix-run/cloudflare": "^1.7.5",
@@ -34,6 +37,7 @@
     "@types/react": "^17.0.47",
     "@types/react-dom": "^17.0.17",
     "autoprefixer": "^10.4.13",
+    "esbuild-register": "^3.4.1",
     "eslint": "^8.23.1",
     "npm-run-all": "^4.1.5",
     "pm2": "^5.2.2",
