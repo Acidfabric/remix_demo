@@ -13,7 +13,7 @@
     "start": "cross-env NODE_ENV=production npm run dev:wrangler",
     "css:generate": "tailwindcss -o app/styles/app.css",
     "prisma:generate": "prisma generate --data-proxy",
-    "prisma:migrate": "DATABASE_URL=$(grep MIGRATE_DATABASE_URL .env | cut -d '=' -f2) prisma migrate deploy"
+    "prisma:migrate": "DATABASE_URL=\"$MIGRATE_DATABASE_URL\" prisma migrate deploy"
   },
   "prisma": {
     "seed": "node --require esbuild-register prisma/seed.ts"

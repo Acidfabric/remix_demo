@@ -13,7 +13,7 @@ function getSessionStorage(context: AppLoadContext) {
   invariant(context.SESSION_SECRET, "SESSION_SECRET must be set");
 
   return createCloudflareKVSessionStorage({
-    kv: context["SESSION"] as KVNamespace,
+    kv: context.SESSIONS as KVNamespace,
     cookie: createCookie("__session", {
       httpOnly: true,
       path: "/",
