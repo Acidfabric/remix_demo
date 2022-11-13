@@ -1,4 +1,9 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/cloudflare";
+import type {
+  LinksFunction,
+  LoaderArgs,
+  MetaFunction,
+} from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
 import {
   Links,
   LiveReload,
@@ -10,6 +15,7 @@ import {
 import { withSentry } from "@sentry/remix";
 
 import styles from "./styles/app.css";
+import { getUser } from "./session.server";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -20,6 +26,12 @@ export const meta: MetaFunction = () => ({
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: styles }];
 };
+
+export async function loader({ request, context }: LoaderArgs) {
+  return json({
+    user: await getUser(request, context),
+  });
+}
 
 function App() {
   return (
