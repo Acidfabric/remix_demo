@@ -12,7 +12,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { withSentry } from "@sentry/remix";
+import * as Sentry from "@sentry/remix";
 
 import styles from "./styles/app.css";
 import { getUser } from "./session.server";
@@ -33,21 +33,55 @@ export async function loader({ request, context }: LoaderArgs) {
   });
 }
 
-function App() {
+type Props = {
+  children: React.ReactNode;
+  title?: string;
+};
+
+function Document({ children, title }: Props) {
+  const renderTitle = () => {
+    if (!title) return null;
+
+    return <title>{title}</title>;
+  };
+
   return (
     <html lang="en">
       <head>
         <Meta />
         <Links />
+        {renderTitle()}
       </head>
       <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
+        {children}
         <LiveReload />
       </body>
     </html>
   );
 }
 
-export default withSentry(App);
+function App() {
+  return (
+    <Document>
+      <Outlet />
+      <ScrollRestoration />
+      <Scripts />
+      <LiveReload />
+    </Document>
+  );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  Sentry.captureException(error);
+
+  return (
+    <Document title="Uh-oh!">
+      <div className="error-container">
+        <h1>App Error</h1>
+        <pre>{error.message}</pre>
+      </div>
+    </Document>
+  );
+}
+
+export default Sentry.withSentry(App);
